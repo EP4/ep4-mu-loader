@@ -20,7 +20,7 @@
  * License URI:         https://www.gnu.org/licenses/gpl-3.0.html
  *
  * @ep4-compatibility-checker
- * Requires At Least:   5.0
+ * Requires At Least:   4.7
  * Tested Up To:
  * PHP:                 5.2.4
  * MySQL:
@@ -245,7 +245,7 @@ class EP4_MU_Loader {
 	 * Allows to exclude specific MU plugins so they aren't autoloaded.
 	 *
 	 * If the $excluded_plugins array contains PHP files, they will be excluded. Otherwise, it'll
-	 * loop through all MU plugins available for autoloading, and look for the directory in their
+	 * loop through all MU plugins available for autoloading, and look for the directory name in their
 	 * path, or the presence of a keyword in the path.
 	 *
 	 * @since    1.0.0
