@@ -304,15 +304,14 @@ class EP4_MU_Loader {
 			// Change sorting when browsing must-use plugins screen. Combined with setting the value for $mu_plugin_data['Order']
 			// below, it'll allow us to nest the loaded plugins just under the row of the loader itself in the MU plugins table.
 			if ( ! empty( $_REQUEST['plugin_status'] ) && 'mustuse' === $_REQUEST['plugin_status'] ) { // WPCS: CSRF ok.
-				$orderby = 'Order'; // Override global ok.
-				// Set the order of the loader row to 0.
-				$position = 0;
+				$orderby  = 'Order'; // Override global ok.
+				$position = 10000; // Set the order of the loader row to 10000.
 				$mu_total = count( $plugins['mustuse'] );
 				$basename = plugin_basename( __FILE__ );
 
 				$plugins['mustuse'] = wp_list_sort( $plugins['mustuse'], 'Name', 'ASC', true ); // Override $plugins global.
 				foreach ( $plugins['mustuse'] as $plugin_path => $plugin_data ) {
-					$plugins['mustuse'][ $plugin_path ]['Order'] = ( $plugin_path === $basename ) ? count( $plugins['mustuse'] ) : $position; // Override $plugins global.
+					$plugins['mustuse'][ $plugin_path ]['Order'] = ( $plugin_path === $basename ) ? $position + $mu_total : $position; // Override $plugins global.
 					$position++;
 				}
 
