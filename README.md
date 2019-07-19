@@ -5,7 +5,7 @@ __Contributors:__      DaveLavoie, EP4
 __Donate link:__  
 __Tags:__              must-use, must-use plugins, mu-plugins, MU, plugins, loader, autoloader, directory, subdirectory, WP Captain, EP4  
 __Requires at least:__ 4.7  
-__Tested up to:__      5.2.2 
+__Tested up to:__      5.2.2  
 __Stable tag:__        1.0.1  
 __License:__           GPLv3 or later  
 __License URI:__       http://www.gnu.org/licenses/gpl-3.0.html  
