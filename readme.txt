@@ -74,7 +74,7 @@ if ( EP4_MU_Loader::this()->have_mu_plugins() ) {
 }
 ```
 
-Remember that you can replace the values in the array by those you want to exclude. If the array contains PHP files, they will be excluded. Otherwise, it'll loop through all MU plugins available for autoloading, and look for the directory name in their path, or the presence of a keyword in the path. For example, ``array( 'wp', 'seo' )`` would exclude all plugins that includes the words 'wp' or 'seo' in their directory name.
+Remember that you can replace the values in the array by those you want to exclude. If the array contains PHP files, they will be excluded. Otherwise, it'll loop through all MU plugins available for autoloading, and look for the directory name in their path, or the presence of a keyword in the path. For example, ``array( 'wp', 'seo' )`` would exclude any plugin that includes the words 'wp' or 'seo' in their directory name.
 
 = How I can know if the autoloader is working? =
 
