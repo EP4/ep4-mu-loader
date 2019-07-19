@@ -1,0 +1,11 @@
+*                       text=auto
+
+# Ignored files during git-archive. Since the plugin must be installed at the root of
+# the mu-plugins directory, we just want the ep4-mu-loader.php file to be included, and
+# no other files.
+
+.gitattributes          export-ignore
+.gitignore              export-ignore
+README.md               export-ignore
+readme.txt              export-ignore
+composer.json           export-ignore
