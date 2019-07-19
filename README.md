@@ -1,14 +1,14 @@
 EP4 Must-Use Plugins Autoloader
 ===============================
 
-__Contributors:__      DaveLavoie, EP4
-__Donate link:__
-__Tags:__              must-use, must-use plugins, mu-plugins, MU, plugins, loader, autoloader, directory, subdirectory, WP Captain, EP4
-__Requires at least:__ 4.7
-__Tested up to:__      5.2.2
-__Stable tag:__        1.0.1
-__License:__           GPLv3 or later
-__License URI:__       http://www.gnu.org/licenses/gpl-3.0.html
+__Contributors:__      DaveLavoie, EP4  
+__Donate link:__  
+__Tags:__              must-use, must-use plugins, mu-plugins, MU, plugins, loader, autoloader, directory, subdirectory, WP Captain, EP4  
+__Requires at least:__ 4.7  
+__Tested up to:__      5.2.2 
+__Stable tag:__        1.0.1  
+__License:__           GPLv3 or later  
+__License URI:__       http://www.gnu.org/licenses/gpl-3.0.html  
 
 This must-use plugin loads all plugins inside subdirectories of the /mu-plugins directory.
 
@@ -52,7 +52,7 @@ define( 'WPMU_PLUGIN_AUTOLOAD_EXCLUDE', array( 'wpengine-common', 'force-strong-
  define( 'WPMU_PLUGIN_AUTOLOAD_EXCLUDE', 'wpengine-common, force-strong-passwords' );
 ```
 
-3. Even though using the constant is the preferred way, you can also exclude folders by changing a line in the plugin itself. Look for the following line of code just before the while loop found at the end of the file, near line 461:
+3. Even though **using the constant is the preferred way**, you can also exclude folders by changing a line in the plugin itself. Look for the following line of code just before the while loop found at the end of the file, near line 461:
 
 ```php
 EP4_MU_Loader::this()->exclude_mu_plugins();
@@ -95,7 +95,7 @@ Changelog
 
 * Added support for using the ``WPMU_PLUGIN_AUTOLOAD_EXCLUDE`` constant.
 * Fixed an issue that was preventing plugins from being excluded in specific cases. Previously, using ``array( 'wp', 'seo' )`` would have only worked if the plugin path started with those keywords, but not if the string was found in the plugin path.
-* Added composer.json file so the plugin can be included using composer.
+* Added the composer.json file so the plugin can be included using composer.
 
 ### 1.0 - 2019-01-22 ###
 
