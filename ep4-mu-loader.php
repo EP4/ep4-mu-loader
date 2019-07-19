@@ -13,7 +13,7 @@
  * Plugin Name:         EP4 Must-Use Plugins Autoloader
  * Plugin URI:          https://wpcaptain.com
  * Description:         This must-use plugin loads all plugins inside subdirectories of the /mu-plugins directory.
- * Version:             1.0
+ * Version:             1.0.1
  * Author:              Dave Lavoie, EP4
  * Author URI:          https://ep4.com
  * License:             GPL-3.0+
@@ -21,7 +21,7 @@
  *
  * @ep4-compatibility-checker
  * Requires At Least:   4.7
- * Tested Up To:
+ * Tested Up To:        5.2.2
  * PHP:                 5.2.4
  * MySQL:
  * Required Plugins:
@@ -107,7 +107,7 @@ class EP4_MU_Loader {
 	private static $this = null;
 
 	/**
-	 * Create a single instance of the current class when called for the first time, and return the reference to it afterwards.
+	 * Creates a single instance of the current class when called for the first time, and return the reference to it afterwards.
 	 *
 	 * @since    1.0.0
 	 * @access   public
@@ -122,7 +122,7 @@ class EP4_MU_Loader {
 	}
 
 	/**
-	 * Create the loader instance and prepare hooks. Can only be self constructed.
+	 * Creates the loader instance and prepare hooks. Can only be self constructed.
 	 *
 	 * @since    1.0.0
 	 * @access   private
@@ -136,7 +136,7 @@ class EP4_MU_Loader {
 	}
 
 	/**
-	 * Check the must-use plugins directory and retrieve all plugin files with plugin data.
+	 * Checks the must-use plugins directory and retrieve all plugin files with plugin data.
 	 *
 	 * This method only supports plugin files in the base plugins directory
 	 * (wp-content/mu-plugins) and in one directory above the plugins directory
@@ -192,7 +192,7 @@ class EP4_MU_Loader {
 	}
 
 	/**
-	 * Check if there are still MU plugins that must be included or not, based on the pointer position.
+	 * Checks if there are still MU plugins that must be included or not, based on the pointer position.
 	 *
 	 * @since    1.0.0
 	 * @access   public
@@ -214,7 +214,7 @@ class EP4_MU_Loader {
 	}
 
 	/**
-	 * Iterate the pointer index in the loop and return the current plugin file.
+	 * Iterates the pointer index in the loop and return the current plugin file.
 	 *
 	 * @since    1.0.0
 	 * @access   public
@@ -249,25 +249,50 @@ class EP4_MU_Loader {
 	 * path, or the presence of a keyword in the path.
 	 *
 	 * @since    1.0.0
+	 * @since    1.0.1   Added support for using the `WPMU_PLUGIN_AUTOLOAD_EXCLUDE` constant.
 	 * @access   public
 	 *
 	 * @uses     $this->get_mu_plugins()
 	 * @used-by  self::this() in global context.
 	 *
-	 * @param    array|string $excluded_plugins Either a string representing a plugin file, a plugin directory, or a keyword to search for, or an array of strings.
+	 * @param    array|string $excluded_plugins Either a string representing a plugin file, a plugin directory, or a
+	 *                                          keyword to search for, or an array of strings. Default: empty array.
 	 */
 	public function exclude_mu_plugins( $excluded_plugins = array() ) {
+		// Bails out early if no plugin should be excluded.
+		if ( ! defined( 'WPMU_PLUGIN_AUTOLOAD_EXCLUDE' ) && empty( $excluded_plugins ) ) {
+			return;
+		}
+
+		/**
+		* Exclude some directories from being autoloaded using the `WPMU_PLUGIN_AUTOLOAD_EXCLUDE` constant.
+		*
+		* Arrays might not be allowed for constants when not using PHP7, so we can expect both an array or
+		* a string of plugins separated by commas.
+		*
+		* @since 1.0.1
+		*
+		* @var type string|array WPMU_PLUGIN_AUTOLOAD_EXCLUDE List of directory to exludes from the autoload.
+		*/
+		$excluded_wpmu_plugins = defined( 'WPMU_PLUGIN_AUTOLOAD_EXCLUDE' ) ? WPMU_PLUGIN_AUTOLOAD_EXCLUDE : array();
+		if ( ! empty( $excluded_wpmu_plugins ) && ! is_array( $excluded_wpmu_plugins ) ) {
+			$excluded_wpmu_plugins = array_map( 'trim', explode( ",", $excluded_wpmu_plugins ) );
+		}
+
+		// Merge excluded plugins from the constant with excluded plugins the plugin, though both shouldn't be used at the same time.
+		$excluded_plugins = wp_parse_args( $excluded_wpmu_plugins, $excluded_plugins );
+
 		// Prepare vars.
 		$excluded_plugins = ! is_array( $excluded_plugins ) ? (array) $excluded_plugins : $excluded_plugins;
 		$excluded_files   = array();
 		$mu_plugins       = $this->get_mu_plugins();
 
 		// Loop through the list of excluded plugins, and exclude them if they exists.
-		foreach ( $excluded_plugins as $k => $plugin ) {
-			$excluded_plugin_path = path_join( WPMU_PLUGIN_DIR, $plugin );
+		foreach ( $excluded_plugins as $excluded_plugin ) {
 			// Loop through the list of autoloaded MU plugins and unset those that are meant to be excluded.
 			foreach ( array_keys( $mu_plugins ) as $mu_plugin_path ) {
-				if ( strpos( $mu_plugin_path, $excluded_plugin_path ) !== false ) {
+				$mu_plugin = str_replace( trailingslashit( WPMU_PLUGIN_DIR ), '',  $mu_plugin_path );
+				if ( strpos( $mu_plugin, $excluded_plugin ) !== false ) {
 					unset( $mu_plugins[ $mu_plugin_path ] );
 				}
 			}
@@ -278,7 +303,7 @@ class EP4_MU_Loader {
 	}
 
 	/**
-	 * Use the 'show_advanced_plugins' filter to add loaded MU plugins to the table for display.
+	 * Uses the 'show_advanced_plugins' filter to add loaded MU plugins to the table for display.
 	 *
 	 * We're making use of the 'show_advanced_filter' as if it was an action hook, hence we don't
 	 * change the value of the $show parameter.
@@ -334,7 +359,7 @@ class EP4_MU_Loader {
 	}
 
 	/**
-	 * Edit the MU plugin rows in order to fix the slug and add a parameter to the URL.
+	 * Edits the MU plugin rows in order to fix the slug and add a parameter to the URL.
 	 *
 	 * Insert the CSS styles, and add a parameter to the "View details" link for disabling the install button.
 	 *
@@ -374,7 +399,7 @@ class EP4_MU_Loader {
 	}
 
 	/**
-	 * Hide the install & update links by filtering the Plugin Installation API response results.
+	 * Hides the install & update links by filtering the Plugin Installation API response results.
 	 *
 	 * @since    1.0.0
 	 * @access   public
@@ -400,17 +425,40 @@ class EP4_MU_Loader {
 /**
  * Run the Loader from outside of the class itself in order to prevent any issues.
  *
- * The include_once statement could run from inside the class, but doing so will probably cause sneaky issues as all plugins
- * are usually loaded from the global scope. Better be safe than sorry, and include the plugins in the global scope.
+ * The include_once statement could run from inside the class, but doing so will
+ * probably cause sneaky issues as all plugins are usually loaded from the global
+ * scope. Better to be safe than sorry, and include the plugins in the global scope.
  *
- * To exclude specific folders or plugins from being loaded by the loader, add the following line just 
- * before the while loop. For example, for websites hosted on WPEngine servers, one must add the following:
- * EP4_MU_Loader::this()->exclude_mu_plugins( array( 'wpengine-common', 'force-strong-passwords' ) );
+ * To exclude specific folders or plugins from being loaded by the loader, you
+ * can do one of the following:
  *
- * @see          https://wordpress.org/support/topic/fatal-error-when-the-plugin-is-loaded-from-outside-of-the-global-scope/
- * @since        1.0.0
+ * - Define the `WPMU_PLUGIN_AUTOLOAD_EXCLUDE` constant in wp-config.php. If using
+ *   PHP7+, you can define the constant this way. For example, for websites hosted
+ *   on WPEngine servers, one must add the following:
+ *
+ *       define( 'WPMU_PLUGIN_AUTOLOAD_EXCLUDE', array( 'wpengine-common', 'force-strong-passwords' ) );
+ *
+ * - If you're running an older version of PHP, arrays can't be used in constant,
+ *   so you must define the constant this way instead:
+ *
+ *       define( 'WPMU_PLUGIN_AUTOLOAD_EXCLUDE', 'wpengine-common, force-strong-passwords' );
+ *
+ * - Even though using the constant is the preferred way, you can also exclude
+ *   folders by changing the following line below:
+ *
+ *       EP4_MU_Loader::this()->exclude_mu_plugins();
+ *
+ *   And by replacing it with:
+ *
+ *       EP4_MU_Loader::this()->exclude_mu_plugins( array( 'wpengine-common', 'force-strong-passwords' ) );
+ *
+ * @see    https://wordpress.org/support/topic/fatal-error-when-the-plugin-is-loaded-from-outside-of-the-global-scope/
+ *
+ * @since  1.0.0
+ * @since  1.0.1  The `exclude_mu_plugins' method is now always executed.
  */
 if ( EP4_MU_Loader::this()->have_mu_plugins() ) {
+	EP4_MU_Loader::this()->exclude_mu_plugins(); // You can pass an array of excluded plugins here.
 	while ( EP4_MU_Loader::this()->have_mu_plugins() ) {
 		include_once EP4_MU_Loader::this()->the_mu_plugin();
 	}
