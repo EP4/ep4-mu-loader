@@ -1,14 +1,14 @@
 EP4 Must-Use Plugins Autoloader
 ===============================
 
-__Contributors:__      DaveLavoie, EP4  
-__Donate link:__  
-__Tags:__              must-use, must-use plugins, mu-plugins, MU, plugins, loader, autoloader, directory, subdirectory, WP Captain, EP4  
-__Requires at least:__ 4.7  
-__Tested up to:__      5.0.3  
-__Stable tag:__        1.0.0  
-__License:__           GPLv3 or later  
-__License URI:__       http://www.gnu.org/licenses/gpl-3.0.html  
+__Contributors:__      DaveLavoie, EP4
+__Donate link:__
+__Tags:__              must-use, must-use plugins, mu-plugins, MU, plugins, loader, autoloader, directory, subdirectory, WP Captain, EP4
+__Requires at least:__ 4.7
+__Tested up to:__      5.2.2
+__Stable tag:__        1.0.1
+__License:__           GPLv3 or later
+__License URI:__       http://www.gnu.org/licenses/gpl-3.0.html
 
 This must-use plugin loads all plugins inside subdirectories of the /mu-plugins directory.
 
@@ -31,18 +31,40 @@ To exclude specific folders or plugins from being loaded by the autoloader, see 
 
 ### Directly From WordPress Admin Dashboard ###
 
-This is not recommended since the autoloader should really be moved to the ``mu-plugins`` directory and installing this plugin from the WordPress Admin Dashboard doesn't allow that. However this plugin will also work if used as a normal plugin, as long as it's enabled!
+This is not recommended since the autoloader should really be moved to the ``mu-plugins`` directory and installing this plugin from the WordPress Admin Dashboard doesn't allow that. However this plugin will also work if used as a normal plugin, as long as it's enabled! If you install the plugin from the admin dashboard, you should move it to the mu-plugins directory afterwards.
 
 Frequently Asked Questions
 --------------------------
 
 ### Can I exclude specific plugins and directories from being loaded by the autoloader? ###
 
-Yes! To exclude specific folders or plugins from being loaded by the autoloader, add the following line of code just before the while loop found at the end of the file. This example applies to all websites hosted on WPEngine servers since they add their own set of plugins to the mu-plugins directory causing issues:
+Yes! To exclude specific folders or plugins from being loaded by the autoloader, you can do one of the following:
+
+1. **If using PHP7 or earlier**, define the `WPMU_PLUGIN_AUTOLOAD_EXCLUDE` constant in wp-config.php. For example, for websites hosted on WPEngine servers,  since they add their own set of plugins to the mu-plugins directory and use their own autoloader to load them, one must add the following in the wp-config.php file:
+
+```php
+define( 'WPMU_PLUGIN_AUTOLOAD_EXCLUDE', array( 'wpengine-common', 'force-strong-passwords' ) );
+```
+
+2. **If you're running a version of PHP older than PHP7**, arrays can't be used in constant, so you must define the constant with a string. The following will work, regardless of the PHP version used:
+
+```php
+ define( 'WPMU_PLUGIN_AUTOLOAD_EXCLUDE', 'wpengine-common, force-strong-passwords' );
+```
+
+3. Even though using the constant is the preferred way, you can also exclude folders by changing a line in the plugin itself. Look for the following line of code just before the while loop found at the end of the file, near line 461:
+
+```php
+EP4_MU_Loader::this()->exclude_mu_plugins();
+```
+
+And replace it with the following (change the values in the array so it fits your needs):
+
 ```php
 EP4_MU_Loader::this()->exclude_mu_plugins( array( 'wpengine-common', 'force-strong-passwords' ) );
 ```
-So at the end of the PHP file, you should have the following lines:
+
+So at the end of the PHP file, it should look like this:
 
 ```php
 if ( EP4_MU_Loader::this()->have_mu_plugins() ) {
@@ -68,6 +90,12 @@ None.
 
 Changelog
 ---------
+
+### 1.0.1 - 2019-07-19 ###
+
+* Added support for using the ``WPMU_PLUGIN_AUTOLOAD_EXCLUDE`` constant.
+* Fixed an issue that was preventing plugins from being excluded in specific cases. Previously, using ``array( 'wp', 'seo' )`` would have only worked if the plugin path started with those keywords, but not if the string was found in the plugin path.
+* Added composer.json file so the plugin can be included using composer.
 
 ### 1.0 - 2019-01-22 ###
 
