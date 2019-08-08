@@ -1,14 +1,14 @@
 EP4 Must-Use Plugins Autoloader
 ===============================
 
-__Contributors:__      DaveLavoie, EP4  
-__Donate link:__  
-__Tags:__              must-use, must-use plugins, mu-plugins, MU, plugins, loader, autoloader, directory, subdirectory, WP Captain, EP4  
-__Requires at least:__ 4.7  
-__Tested up to:__      5.2.2  
-__Stable tag:__        1.0.1  
-__License:__           GPLv3 or later  
-__License URI:__       http://www.gnu.org/licenses/gpl-3.0.html  
+__Contributors:__      DaveLavoie, EP4
+__Donate link:__
+__Tags:__              must-use, must-use plugins, mu-plugins, MU, plugins, loader, autoloader, directory, subdirectory, WP Captain, EP4
+__Requires at least:__ 4.7
+__Tested up to:__      5.2.2
+__Stable tag:__        1.0.2
+__License:__           GPLv3 or later
+__License URI:__       http://www.gnu.org/licenses/gpl-3.0.html
 
 This must-use plugin loads all plugins inside subdirectories of the /mu-plugins directory.
 
@@ -69,7 +69,7 @@ So at the end of the PHP file, it should look like this:
 ```php
 if ( EP4_MU_Loader::this()->have_mu_plugins() ) {
 	// Replace the values in the array with yours.
-	EP4_MU_Loader::this()->exclude_mu_plugins( array( 'wpengine-common', 'force-strong-passwords' ) ); 
+	EP4_MU_Loader::this()->exclude_mu_plugins( array( 'wpengine-common', 'force-strong-passwords' ) );
 	while ( EP4_MU_Loader::this()->have_mu_plugins() ) {
 		include_once EP4_MU_Loader::this()->the_mu_plugin();
 	}
@@ -90,6 +90,9 @@ None.
 
 Changelog
 ---------
+### 1.0.2 - 2019-08-08 ###
+
+* Fixing an error regarding file permissions when cloning the repo from Github.
 
 ### 1.0.1 - 2019-07-19 ###
 
