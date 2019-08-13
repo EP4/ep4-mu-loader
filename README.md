@@ -1,13 +1,13 @@
 EP4 Must-Use Plugins Autoloader
 ===============================
 
-__Contributors:__      DaveLavoie, EP4
-__Donate link:__
-__Tags:__              must-use, must-use plugins, mu-plugins, MU, plugins, loader, autoloader, directory, subdirectory, WP Captain, EP4
-__Requires at least:__ 4.7
-__Tested up to:__      5.2.2
-__Stable tag:__        1.0.2
-__License:__           GPLv3 or later
+__Contributors:__      DaveLavoie, EP4  
+__Donate link:__  
+__Tags:__              must-use, must-use plugins, mu-plugins, MU, plugins, loader, autoloader, directory, subdirectory, WP Captain, EP4  
+__Requires at least:__ 4.7  
+__Tested up to:__      5.2.2  
+__Stable tag:__        1.0.2  
+__License:__           GPLv3 or later  
 __License URI:__       http://www.gnu.org/licenses/gpl-3.0.html
 
 This must-use plugin loads all plugins inside subdirectories of the /mu-plugins directory.
@@ -76,9 +76,9 @@ if ( EP4_MU_Loader::this()->have_mu_plugins() ) {
 }
 ```
 
-Remember that you can replace the values in the array by those you want to exclude. If the array contains PHP files, they will be excluded. Otherwise, it'll loop through all MU plugins available for autoloading, and look for the directory name in their path, or the presence of a keyword in the path. For example, ``array( 'wp', 'seo' )`` would exclude any plugin that includes the words 'wp' or 'seo' in their directory name.
+Remember that you can replace the values in the array by those you want to exclude. If the array contains PHP files, they will be excluded. Otherwise, it'll loop through all MU plugins available for autoloading, and look for the directory name in their path, or the presence of a keyword in the path. For example, ``array( 'wp', 'seo' )`` will exclude all plugins which include the words 'wp' or 'seo' in their directory name.
 
-### How I can know if the autoloader is working? ###
+### How can I know if the autoloader is working? ###
 
 You can tell it's working by logging in to your WP Admin and taking a look at the list of Must-Use plugins that are shown (usually displayed at ``/wp-admin/plugins.php?plugin_status=mustuse``). All plugins loaded by the autoloader will be displayed with a folder icon just before their name.
 
